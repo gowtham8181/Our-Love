@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #e0f2fe, #7dd3fc, #38bdf8, #0284c7);
+            background-size: 300% 300%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            text-align: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(40px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .animate-fade-up {
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .delay-3 { animation-delay: 0.5s; }
+        .delay-4 { animation-delay: 0.7s; }
+
+        /* Floating Hearts Animation */
+        .hearts-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+
+        .heart {
+            position: absolute; bottom: -100px;
+            width: 15px; height: 15px;
+            background: #ffffff; 
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
+            transform: rotate(45deg);
+            animation: floatUp linear infinite;
+        }
+
+        .heart::before, .heart::after {
+            content: ''; position: absolute;
+            width: 15px; height: 15px;
+            background: #ffffff;
+            border-radius: 50%;
+        }
+        .heart::before { top: -8px; left: 0; }
+        .heart::after { top: 0; left: -8px; }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(45deg) scale(0.8); opacity: 0; }
+            10% { opacity: 0.4; } 
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-120vh) rotate(45deg) scale(1.8); opacity: 0; }
+        }
+
+        /* Fixed Emoji Floating Animation */
+        @keyframes floatEmojiUp {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            20% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+            100% { transform: translateY(-150px) scale(1.5); opacity: 0; }
+        }
+
+        .floating-emoji {
+            position: absolute; font-size: 2rem;
+            pointer-events: none; z-index: 50;
+            animation: floatEmojiUp 1.5s ease-out forwards;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+        }
+
+        /* Screens and Layout */
+        .screen {
+            min-height: 100vh; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 20px; transition: opacity 1s ease-in-out;
+            position: relative; z-index: 10;
+        }
+
+        .hidden-screen { display: none !important; opacity: 0; }
+
+        /* Premium Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            border-left: 1px solid rgba(255, 255, 255, 0.5);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 50, 100, 0.15), inset 0 0 15px rgba(255,255,255,0.1);
+        }
+
+        /* Lock Screen */
+        .lock-container { padding: 30px 20px; max-width: 90%; width: 420px; }
+        .lock-container h1 {
+            font-family: 'Dancing Script', cursive; font-size: 2.8em;
+            margin-bottom: 10px; line-height: 1.1;
+            text-shadow: 0px 3px 10px rgba(0, 50, 100, 0.4);
+        }
+        input[type="password"] {
+            font-size: 24px; padding: 10px; width: 130px;
+            text-align: center; background: rgba(255, 255, 255, 0.2);
+            border: none; border-bottom: 3px solid rgba(255,255,255,0.5);
+            border-radius: 8px 8px 0 0; margin: 15px 0 25px; outline: none;
+            letter-spacing: 8px; color: #fff; font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        @media (min-width: 768px) {
+            .lock-container { padding: 50px 40px; }
+            .lock-container h1 { font-size: 4em; }
+            input[type="password"] { font-size: 32px; width: 160px; letter-spacing: 12px; margin: 20px 0 35px; }
+        }
+
+        input[type="password"]:focus {
+            background: rgba(255, 255, 255, 0.4); border-bottom: 3px solid #fff;
+            box-shadow: 0 15px 15px -10px rgba(0,0,0,0.1);
+        }
+        input[type="password"]::placeholder { color: rgba(255,255,255,0.5); }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            color: white; border: 1px solid rgba(255,255,255,0.3);
+            padding: 12px 30px; font-size: 16px; font-weight: 600;
+            border-radius: 50px; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: block; margin: 0 auto;
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.4), inset 0 2px 5px rgba(255,255,255,0.3);
+        }
+
+        @media (min-width: 768px) {
+            .btn-primary { padding: 15px 40px; font-size: 18px; }
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(2, 132, 199, 0.6), inset 0 2px 5px rgba(255,255,255,0.4);
+        }
+
+        /* Typography */
+        .section-title {
+            font-family: 'Dancing Script', cursive; font-size: 2.2em;
+            margin-bottom: 15px; 
+            text-shadow: 0px 3px 12px rgba(0, 50, 100, 0.4);
+        }
+        @media (min-width: 768px) {
+            .section-title { font-size: 3.2em; margin-bottom: 25px; }
+        }
+
+        .main-quote-text { text-shadow: 0px 3px 15px rgba(0, 50, 100, 0.4); }
+
+        /* Polaroid Gallery - FIXED FOR MOBILE */
+        .gallery-container {
+            display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+            margin: 20px auto 40px; max-width: 900px;
+        }
+
+        .scattered-photo {
+            background: #fff; padding: 6px 6px 25px 6px;
+            border-radius: 6px; box-shadow: 0 8px 20px rgba(0, 50, 100, 0.2);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* Reduced mobile width so they fit better */
+            width: 44vw; max-width: 220px; position: relative;
+            cursor: pointer; 
+            margin-bottom: 10px; /* Extra breathing room */
+        }
+
+        @media (min-width: 600px) {
+            .gallery-container { gap: 15px; margin: 30px auto 60px; }
+            .scattered-photo { width: 230px; padding: 12px 12px 45px 12px; margin-bottom: 0; }
+        }
+
+        .scattered-photo::after {
+            content: ''; position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+            width: 30px; height: 8px; background: rgba(255,255,255,0.4);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 2px; z-index: 5;
+        }
+        @media (min-width: 600px) { .scattered-photo::after { width: 40px; height: 12px; top: 6px; } }
+
+        /* Custom wrappers for the image and the quote */
+        .photo-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+        }
+
+        .photo-wrapper img {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; object-fit: cover;
+            border-radius: 4px; box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+            transition: opacity 0.5s ease;
+            z-index: 10;
+        }
+
+        /* The hidden quote styling - FIXED TEXT SIZING */
+        .photo-quote {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #f0f9ff; 
+            border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 8px; text-align: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            z-index: 5;
+            overflow: hidden; /* Prevents text from bleeding out */
+        }
+
+        /* Responsive text sizes for polaroid quotes */
+        .photo-quote p {
+            font-family: 'Dancing Script', cursive;
+            font-size: 15px; /* Base small size for mobile */
+            color: #075985;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        @media (min-width: 380px) { .photo-quote p { font-size: 18px; } }
+        @media (min-width: 600px) { .photo-quote p { font-size: 22px; padding: 10px; } }
+
+        /* When the 'reveal' class is toggled, hide the image */
+        .scattered-photo.reveal img {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .scattered-photo:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            box-shadow: 0 20px 40px rgba(0, 50, 100, 0.3);
+            z-index: 10 !important;
+        }
+        
+        /* Adjusted rotations to be slightly softer for mobile layout */
+        .scattered-photo:nth-child(1) { transform: rotate(-4deg); z-index: 1; }
+        .scattered-photo:nth-child(2) { transform: rotate(3deg) translateY(10px); z-index: 2; }
+        .scattered-photo:nth-child(3) { transform: rotate(-3deg) translateY(-5px); z-index: 3; }
+        .scattered-photo:nth-child(4) { transform: rotate(4deg) translateY(5px); z-index: 4; }
+        .scattered-photo:nth-child(5) { transform: rotate(-2deg) translateY(0px); z-index: 5; }
+
+        /* Buttons & Interactions */
+        .vibe-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            position: relative; overflow: visible;
+        }
+        @media (hover: hover) {
+            .vibe-btn:hover {
+                background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.6);
+                box-shadow: 0 0 20px rgba(255,255,255,0.3);
+            }
+        }
+        .vibe-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.92); }
+
+        .paper-texture {
+            background: linear-gradient(to bottom right, #ffffff, #f0f9ff);
+            border: 1px solid #e0f2fe;
+            box-shadow: 0 20px 50px rgba(0, 50, 100, 0.2), inset 0 0 20px rgba(0,0,0,0.02);
+        }
+
+        /* NEW CUTE FLOATING MUSIC BUTTON */
+        #music-toggle {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #music-toggle:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255,255,255,0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="img/mylove.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="hearts-container" id="hearts-container"></div>
+
+    <div id="lock-screen" class="screen">
+        <div class="lock-container glass-panel animate-fade-up">
+            <h1>Our Special Place</h1>
+            <p class="text-sky-50 text-sm md:text-lg font-medium tracking-wide drop-shadow-md">Enter our code to unlock</p>
+            <input type="password" id="passcode" maxlength="4" placeholder="••••">
+            <button class="btn-primary" onclick="checkPasscode()">Unlock My Heart</button>
+            <p id="error-message" class="hidden-screen mt-4 text-rose-200 bg-rose-900/40 py-2 px-4 rounded-lg text-xs md:text-sm font-semibold backdrop-blur-md">Oops! Try again, my love.</p>
+        </div>
+    </div>
+
+    <!-- CUTE MUSIC TOGGLE BUTTON -->
+    <button id="music-toggle" class="hidden-screen fixed bottom-6 right-6 z-50 bg-gradient-to-tr from-sky-400/90 to-blue-500/90 backdrop-blur-md border-2 border-white/60 rounded-full py-2 px-5 shadow-[0_5px_15px_rgba(2,132,199,0.5)] text-lg text-white font-semibold cursor-pointer flex items-center gap-2 group" onclick="toggleMusic()">
+        <span id="music-icon" class="animate-pulse text-xl">🎶</span> 
+        <span id="music-text" class="hidden sm:inline">Playing</span>
+    </button>
+
+    <div id="main-content" class="screen hidden-screen !py-10 md:!py-16">
+        
+        <div class="animate-fade-up delay-1 max-w-4xl mx-auto w-full">
+            <h2 class="font-['Dancing_Script'] text-3xl md:text-5xl text-white main-quote-text mb-4 md:mb-8 px-2 leading-relaxed">
+                Nothing is more precious than the moments I spend with you.
+            </h2>
+
+            <div class="gallery-container">
+                
+                <!-- Photo 1 -->
+                <div class="scattered-photo" onclick="this.classList.toggle('reveal')">
+                    <div class="photo-wrapper">
+                        <img src="img/gp1.png" alt="Us">
+                        <div class="photo-quote">
+                            <p>"You are my today and all of my tomorrows. ❤️"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photo 2 -->
+                <div class="scattered-photo" onclick="this.classList.toggle('reveal')">
+                    <div class="photo-wrapper">
+                        <img src="img/gp2.png" alt="Us">
+                        <div class="photo-quote">
+                            <p>"My favorite place in the world is inside your hug. 🫂"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photo 3 -->
+                <div class="scattered-photo" onclick="this.classList.toggle('reveal')">
+                    <div class="photo-wrapper">
+                        <img src="img/gp5.png" alt="Us">
+                        <div class="photo-quote">
+                            <p>"I look at you and see the rest of my life. ✨"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photo 4 -->
+                <div class="scattered-photo" onclick="this.classList.toggle('reveal')">
+                    <div class="photo-wrapper">
+                        <img src="img/gp4.png" alt="Us">
+                        <div class="photo-quote">
+                            <p>"🥰 Your love is my life, and your smile is my happiness. 💖"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photo 5 -->
+                <div class="scattered-photo" onclick="this.classList.toggle('reveal')">
+                    <div class="photo-wrapper">
+                        <img src="img/gp3.png" alt="Us">
+                        <div class="photo-quote">
+                            <p>"I love you more than words can show. 💋"</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        
+        <!-- Vibe Section -->
+        <div class="w-full max-w-lg mx-auto mt-6 md:mt-10 animate-fade-up delay-2 px-4">
+            <h2 class="section-title text-white">Send a Vibe 💌</h2>
+            <div class="glass-panel flex flex-col items-center p-6 md:p-8">
+                
+                <div class="flex justify-center gap-3 sm:gap-6 w-full">
+                    <button onclick="triggerVibe('❤️', 'Sending Love...', 'heart-count', this)" 
+                            class="vibe-btn flex flex-col items-center justify-center p-3 sm:p-4 w-20 sm:w-24 rounded-2xl transition-all duration-300 cursor-pointer group">
+                        <span class="text-3xl sm:text-4xl md:text-5xl group-hover:scale-110 transition-transform duration-300 drop-shadow-md">❤️</span>
+                        <span id="heart-count" class="text-xs sm:text-sm font-bold mt-2 sm:mt-3 drop-shadow-sm text-white">0</span>
+                    </button>
+
+                    <button onclick="triggerVibe('💋', 'Sending a Kiss...', 'kiss-count', this)" 
+                            class="vibe-btn flex flex-col items-center justify-center p-3 sm:p-4 w-20 sm:w-24 rounded-2xl transition-all duration-300 cursor-pointer group">
+                        <span class="text-3xl sm:text-4xl md:text-5xl group-hover:scale-110 transition-transform duration-300 drop-shadow-md">💋</span>
+                        <span id="kiss-count" class="text-xs sm:text-sm font-bold mt-2 sm:mt-3 drop-shadow-sm text-white">0</span>
+                    </button>
+
+                    <button onclick="triggerVibe('🫂', 'Sending a Hug...', 'hug-count', this)" 
+                            class="vibe-btn flex flex-col items-center justify-center p-3 sm:p-4 w-20 sm:w-24 rounded-2xl transition-all duration-300 cursor-pointer group">
+                        <span class="text-3xl sm:text-4xl md:text-5xl group-hover:scale-110 transition-transform duration-300 drop-shadow-md">🫂</span>
+                        <span id="hug-count" class="text-xs sm:text-sm font-bold mt-2 sm:mt-3 drop-shadow-sm text-white">0</span>
+                    </button>
+                </div>
+                <p id="vibe-status" class="text-xs sm:text-sm font-semibold tracking-wide text-sky-100 h-4 transition-opacity duration-300 opacity-0 mt-4"></p>
+            </div>
+        </div>
+
+        <!-- Mini Game -->
+        <div class="w-full max-w-2xl mx-auto mt-6 md:mt-10 px-4 animate-fade-up delay-3">
+            <h2 class="section-title text-white">Pop the Love Bubbles 🫧</h2>
+            <div class="glass-panel relative overflow-hidden min-h-[280px] md:min-h-[320px] flex flex-col items-center justify-center p-4 sm:p-8">
+                
+                <div id="game-decoded-quote" class="text-xs sm:text-sm font-semibold tracking-wide bg-white/40 px-4 sm:px-6 py-2.5 rounded-full backdrop-blur-lg border border-white/50 text-sky-900 mb-4 md:mb-6 text-center shadow-md w-[95%] sm:w-[90%] mx-auto">
+                    Pop rising love hearts to gather sparks!
+                </div>
+
+                <div id="game-start-view" class="flex flex-col items-center mt-2 md:mt-4">
+                    <button onclick="startGame()" class="btn-primary !px-6 sm:!px-10 !py-3 !text-base sm:!text-lg shadow-lg">Start Mini Game</button>
+                </div>
+
+                <div id="game-bubbles-canvas" class="hidden absolute top-0 left-0 w-full h-full pointer-events-auto"></div>
+
+                <div id="game-footer-info" class="hidden absolute bottom-3 sm:bottom-5 left-0 w-full px-4 sm:px-8 flex flex-col sm:flex-row justify-between items-center z-20 gap-2">
+                    <span class="font-bold text-sm bg-sky-900/60 text-white px-4 py-1.5 rounded-full backdrop-blur-md border border-sky-400/50">Sparks: <span id="game-score">0</span> / 10</span>
+                    <button onclick="stopGame()" class="text-xs sm:text-sm font-semibold text-white/80 underline hover:text-white transition bg-black/20 sm:bg-transparent px-3 py-1 rounded-full sm:p-0">End Game</button>
+                </div>
+
+                <div id="game-victory-view" class="hidden flex-col items-center z-20 absolute inset-0 bg-sky-600/90 backdrop-blur-md justify-center rounded-2xl p-4 text-center">
+                    <h3 class="text-3xl sm:text-4xl font-['Dancing_Script'] mb-4 md:mb-6 text-white drop-shadow-lg">You got all the sparks! ✨</h3>
+                    <button onclick="startGame()" class="btn-primary border-white/50 bg-white/20 hover:bg-white/30 !px-6 sm:!px-8">Play Again</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Letter -->
+        <div class="w-full max-w-2xl mx-auto mt-10 md:mt-16 mb-16 md:mb-20 px-4 animate-fade-up delay-4">
+            
+            <div id="envelope-view" onclick="openLetter()" class="glass-panel flex flex-col items-center justify-center p-8 sm:p-12 cursor-pointer transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl group relative border-2 border-white/40">
+                <div class="absolute -top-3 -right-3 md:-top-4 md:-right-4 bg-sky-400 text-white text-xs md:text-sm font-bold px-3 md:px-4 py-1 rounded-full animate-pulse shadow-lg ring-2 ring-white">New!</div>
+                <div class="text-6xl sm:text-7xl mb-3 md:mb-4 group-hover:-rotate-6 group-hover:scale-110 transition-transform duration-300 drop-shadow-xl">💌</div>
+                <p class="font-['Dancing_Script'] text-2xl sm:text-3xl text-white drop-shadow-md">Tap to open your letter...</p>
+            </div>
+
+            <div id="letter-view" class="hidden relative mt-8">
+                <div class="absolute -top-5 left-1/2 -translate-x-1/2 text-4xl sm:text-5xl z-20 animate-bounce drop-shadow-xl cursor-pointer hover:scale-110 transition-transform" onclick="closeLetter()" title="Tap to close">
+                    💝
+                </div>
+                
+                <div class="paper-texture relative overflow-hidden p-6 sm:p-10 md:p-14 text-left rounded-2xl sm:rounded-3xl">
+                    <div class="absolute -right-6 -bottom-6 md:-right-10 md:-bottom-10 text-7xl md:text-9xl opacity-[0.03] pointer-events-none text-sky-900">🌹</div>
+
+                    <div class="font-['Dancing_Script'] text-lg sm:text-2xl md:text-3xl leading-relaxed text-sky-900 drop-shadow-sm space-y-4 sm:space-y-6 relative z-10 font-bold">
+                        <p class="text-2xl sm:text-4xl text-sky-700 mb-4 md:mb-8 border-b border-sky-200/50 pb-2 md:pb-4">Dearest Preethi,</p>
+                        
+                        <p>No Matter The Miles Between Us, My Heart is Always With You.</p>
+                        <p>Every Smile, Every Memory, Every Moment With You is a Treasure I Hold Close.</p>
+                        <p>You Are My Peace, My Happiness, And My Favorite Person In This World.</p>
+                        <p>I Promise To Love You Today, Tomorrow, And Forever.</p>
+                        
+                        <div class="mt-8 md:mt-12 pt-6 md:pt-8 text-right border-t border-sky-200/50">
+                            <p class="text-sky-700 text-xl sm:text-2xl">Love You Forever And Ever And Ever,</p>
+                            <p class="text-4xl sm:text-5xl mt-2 sm:mt-3 text-sky-900">Gowtham</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. Base Logic ---
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            for (let i = 0; i < 20; i++) {
+                let heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 4 + 5 + 's'; 
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                
+                const scale = 0.5 + Math.random() * 1;
+                heart.style.transform = `scale(${scale}) rotate(45deg)`;
+                
+                container.appendChild(heart);
+            }
+        }
+        createHearts();
+
+        // UPDATED: Cute Toggle Music Function
+        function toggleMusic() {
+            const bgMusic = document.getElementById("bg-music");
+            const musicIcon = document.getElementById("music-icon");
+            const musicText = document.getElementById("music-text");
+            
+            if (bgMusic.paused) {
+                bgMusic.play();
+                musicIcon.innerText = "🎶";
+                musicIcon.classList.add("animate-pulse");
+                if(musicText) musicText.innerText = "Playing";
+            } else {
+                bgMusic.pause();
+                musicIcon.innerText = "🔇";
+                musicIcon.classList.remove("animate-pulse");
+                if(musicText) musicText.innerText = "Paused";
+            }
+        }
+
+        function checkPasscode() {
+            const passcode = document.getElementById("passcode").value;
+            const errorMessage = document.getElementById("error-message");
+            const lockScreen = document.getElementById("lock-screen");
+            const mainContent = document.getElementById("main-content");
+            const musicBtn = document.getElementById("music-toggle");
+            const bgMusic = document.getElementById("bg-music");
+
+            if (passcode === "1526") {
+                lockScreen.style.opacity = '0';
+                
+                // Start music and show toggle button
+                bgMusic.volume = 0.4; // Set comfortable volume
+                bgMusic.play().catch(e => console.log("Audio play blocked by browser."));
+                musicBtn.classList.remove("hidden-screen");
+                
+                setTimeout(() => {
+                    lockScreen.classList.add("hidden-screen");
+                    mainContent.classList.remove("hidden-screen");
+                    void mainContent.offsetWidth; 
+                    mainContent.style.opacity = '1';
+                }, 500); 
+            } else {
+                errorMessage.classList.remove("hidden-screen");
+                document.getElementById("passcode").value = ""; 
+                
+                const lockBox = document.querySelector('.lock-container');
+                lockBox.style.transform = 'translate(-15px, 0)';
+                setTimeout(() => lockBox.style.transform = 'translate(15px, 0)', 100);
+                setTimeout(() => lockBox.style.transform = 'translate(-10px, 0)', 200);
+                setTimeout(() => lockBox.style.transform = 'translate(10px, 0)', 300);
+                setTimeout(() => lockBox.style.transform = 'translate(0, 0)', 400);
+            }
+        }
+
+        document.getElementById("passcode").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                checkPasscode();
+            }
+        });
+
+        // --- 2. Virtual Vibes Logic ---
+        let vibeCounts = { 'heart-count': 0, 'kiss-count': 0, 'hug-count': 0 };
+
+        function triggerVibe(emoji, text, counterId, btnElement) {
+            const statusDisplay = document.getElementById('vibe-status');
+            statusDisplay.textContent = text;
+            statusDisplay.style.opacity = '1';
+
+            if (counterId && vibeCounts[counterId] !== undefined) {
+                vibeCounts[counterId]++;
+                document.getElementById(counterId).textContent = vibeCounts[counterId];
+            }
+
+            for(let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.className = 'floating-emoji';
+                    el.textContent = emoji;
+                    el.style.left = (20 + Math.random() * 60) + '%';
+                    el.style.top = '0px'; 
+                    btnElement.appendChild(el);
+                    
+                    setTimeout(() => el.remove(), 1500);
+                }, i * 150);
+            }
+
+            setTimeout(() => { statusDisplay.style.opacity = '0'; }, 2500);
+        }
+
+        // --- 3. Audio & Celebration Helpers ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function playTone(frequency, type, volume, duration) {
+            try {
+                if (!audioCtx) audioCtx = new AudioContext();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.type = type;
+                oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + duration);
+            } catch(e) { console.log("Audio play prevented."); }
+        }
+
+        function triggerHeartCelebrationCascade() {
+            for(let i = 0; i < 4; i++) {
+                setTimeout(() => { createHearts(); }, i * 300);
+            }
+        }
+
+        // --- 4. Love Bubble Mini-Game Logic ---
+        let gameActive = false;
+        let gameInterval = null;
+        let scoreCount = 0;
+
+        const gameQuotes = [
+          "En Chella Kutty Preethii💝",
+          "En Alaguuu Preethiii🌹",
+          "Life Long Papa Va Happy Pathupe♾️❤️",
+          "Love you forever and ever, Preethi!🫂♾️❤️",
+          "Whatever happens, I'll always stand by your side🫂❤️🥰",
+          "Preethi, my sweet precious angel, my home💟",
+          "Waiting For Hug,Love You Preethii🫂❤️",
+          "Every beat of my heart speaks Preethii💗",
+          "My Preethi, my forever smile, my everything🫶",
+          "Love You Forever And Ever And Ever❤️"
+        ];
+
+        function startGame() {
+          gameActive = true;
+          scoreCount = 0;
+          document.getElementById('game-score').textContent = "0";
+          document.getElementById('game-decoded-quote').textContent = "Pop rising love bubbles is active! Gather 10 sparks.";
+          
+          document.getElementById('game-start-view').classList.add('hidden');
+          document.getElementById('game-victory-view').classList.add('hidden');
+          document.getElementById('game-footer-info').classList.remove('hidden');
+          
+          const canvas = document.getElementById('game-bubbles-canvas');
+          canvas.innerHTML = "";
+          canvas.classList.remove('hidden');
+
+          if (gameInterval) clearInterval(gameInterval);
+          gameInterval = setInterval(spawnBubble, 1000);
+        }
+
+        function spawnBubble() {
+          if (!gameActive) return;
+          const canvas = document.getElementById('game-bubbles-canvas');
+          if (canvas.children.length >= 8) return;
+
+          const bubble = document.createElement('button');
+          bubble.className = "absolute p-2 sm:p-3 rounded-full hover:scale-110 active:scale-90 transition-transform bg-gradient-to-tr from-white/90 to-sky-100/90 hover:from-white hover:to-sky-200 border border-white cursor-pointer select-none outline-none shadow-xl flex items-center justify-center z-10";
+          
+          const startX = 10 + Math.random() * 80; 
+          const scaleVal = 0.8 + Math.random() * 0.5;
+          const durationSec = 4 + Math.random() * 3;
+
+          bubble.style.left = `${startX}%`;
+          bubble.style.bottom = `-60px`;
+          bubble.style.transform = `scale(${scaleVal})`;
+          bubble.innerHTML = `<svg viewBox="0 0 24 24" fill="#0ea5e9" class="w-6 h-6 sm:w-7 sm:h-7 text-sky-500 drop-shadow-sm"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
+
+          canvas.appendChild(bubble);
+
+          setTimeout(() => {
+            bubble.style.transition = `bottom ${durationSec}s linear, opacity ${durationSec}s ease, transform ${durationSec}s ease`;
+            bubble.style.bottom = `110%`;
+            bubble.style.opacity = '1';
+          }, 50);
+
+          bubble.onclick = (e) => {
+            e.stopPropagation();
+            popBubble(bubble);
+          };
+
+          setTimeout(() => {
+            if (bubble.parentNode) { bubble.remove(); }
+          }, durationSec * 1000);
+        }
+
+        function popBubble(bubble) {
+          try {
+            playTone(659.25, 'sine', 0.15, 0.15); 
+            setTimeout(() => playTone(783.99, 'sine', 0.2, 0.15), 50); 
+          } catch(e) {}
+
+          bubble.style.transform = "scale(2.5)";
+          bubble.style.opacity = "0";
+          bubble.style.pointerEvents = "none";
+
+          scoreCount++;
+          document.getElementById('game-score').textContent = scoreCount;
+
+          const quote = gameQuotes[Math.floor(Math.random() * gameQuotes.length)];
+          document.getElementById('game-decoded-quote').textContent = `"${quote}"`;
+
+          setTimeout(() => { bubble.remove(); }, 200);
+
+          if (scoreCount >= 10) { triggerGameVictory(); }
+        }
+
+        function triggerGameVictory() {
+          gameActive = false;
+          if (gameInterval) clearInterval(gameInterval);
+
+          document.getElementById('game-bubbles-canvas').classList.add('hidden');
+          document.getElementById('game-bubbles-canvas').innerHTML = "";
+          document.getElementById('game-victory-view').classList.remove('hidden');
+          document.getElementById('game-victory-view').classList.add('flex');
+          document.getElementById('game-footer-info').classList.add('hidden');
+
+          try {
+            playTone(523.25, 'triangle', 0.4, 0.15); 
+            setTimeout(() => playTone(659.25, 'sine', 0.45, 0.15), 100); 
+            setTimeout(() => playTone(783.99, 'sine', 0.5, 0.15), 200); 
+            setTimeout(() => playTone(1046.50, 'sine', 0.75, 0.2), 300); 
+          } catch (e) {}
+
+          triggerHeartCelebrationCascade();
+        }
+
+        function stopGame() {
+          gameActive = false;
+          if (gameInterval) clearInterval(gameInterval);
+
+          document.getElementById('game-bubbles-canvas').classList.add('hidden');
+          document.getElementById('game-start-view').classList.remove('hidden');
+          document.getElementById('game-victory-view').classList.add('hidden');
+          document.getElementById('game-victory-view').classList.remove('flex');
+          document.getElementById('game-footer-info').classList.add('hidden');
+          document.getElementById('game-decoded-quote').textContent = "Pop rising love hearts to gather sparks!";
+          
+          try { playTone(392.00, 'sine', 0.4, 0.1); } catch(e) {}
+        }
+
+        // --- 5. Love Letter Logic ---
+        function openLetter() {
+            const envelope = document.getElementById('envelope-view');
+            const letter = document.getElementById('letter-view');
+            
+            envelope.classList.add('hidden');
+            letter.classList.remove('hidden');
+            
+            triggerHeartCelebrationCascade();
+            
+            try {
+                playTone(523.25, 'sine', 0.2, 0.3); 
+                setTimeout(() => playTone(659.25, 'sine', 0.2, 0.4), 150); 
+            } catch(e) {}
+            
+            setTimeout(() => {
+                letter.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        function closeLetter() {
+            const envelope = document.getElementById('envelope-view');
+            const letter = document.getElementById('letter-view');
+            
+            letter.classList.add('hidden');
+            envelope.classList.remove('hidden');
+        }
+
+    </script>
+
+</body>
+</html>
